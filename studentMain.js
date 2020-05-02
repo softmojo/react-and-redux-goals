@@ -12,3 +12,11 @@
  * from passing in default values for any parameters!):
  * [{ flavor: 'Chocolate', count: 36 }, { flavor: 'Vanilla', count: 210 }];
 */
+
+
+function mealCreator(id) {
+    return {
+        type: 'CREATE_MEAL',
+        id: id,
+    }
+}
