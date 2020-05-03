@@ -8,11 +8,13 @@
         <h1>Todo List</h1>
         <input id='todo' type='text' placeholder="Add Todo" />
         <button id="todoBtn">Add Todo</button>
+        <ul id='todos'></ul>
     </div>
     <div>
         <h1>Goal List</h1>
         <input id='goal' type='text' placeholder="Add Goal" />
         <button id="goalBtn">Add Goal</button>
+        <ul id='goals'></ul>
     </div>
 
     <script type='text/javascript'>
@@ -159,22 +161,33 @@
             input.value = ''
 
             store.dispatch(addGoalAction({
+                id: generateId(),
                 name,
-                complete: false,
-                id: generateId()
             }))
         }
 
-         document.getElementById('todoBtn')
+        document.getElementById('todoBtn')
             .addEventListener('click', addTodo)
 
         document.getElementById('goalBtn')
             .addEventListener('click', addGoal)
 
+        function createRemoveButton(onClick) {
+            const removeBtn = document.createElement('button')
+            removeBtn.innerHTML = 'X'
+            removeBtn.addEventListener('click', onClick)
+            return removeBtn
+        }
+
         function addTodoToDOM(todo) {
             const node = document.createElement('li')
             const text = document.createTextNode(todo.name)
+
+            const removeBtn = createRemoveButton(() => {
+                store.dispatch(removeTodoAction(todo.id))
+            })
             node.appendChild(text)
+            node.appendChild(removeBtn)
             node.style.textDecoration = todo.complete ? 'line-through' : 'none'
 
             node.addEventListener('click', () => {
@@ -188,45 +201,16 @@
         function addGoalToDOM(goal) {
             const node = document.createElement('li')
             const text = document.createTextNode(goal.name)
-            node.appendChild(text)
 
+            const removeBtn = createRemoveButton(() => {
+                store.dispatch(removeGoalAction(goal.id))
+            })
+
+            node.appendChild(text)
+            node.appendChild(removeBtn)
             document.getElementById('goals')
                 .append(node)
         }
-
-        //store.dispatch(addTodoAction({
-        //    id: 0,
-        //    name: 'Walk the dog',
-        //    complete: false,
-        //}))
-
-        //store.dispatch(addTodoAction({
-        //    id: 1,
-        //    name: 'Wash the car',
-        //    complete: false,
-        //}))
-
-        //store.dispatch(addTodoAction({
-        //    id: 2,
-        //    name: 'Go to the gym',
-        //    complete: true,
-        //}))
-
-        //store.dispatch(removeTodoAction(1))
-
-        //store.dispatch(toggleTodoAction(0))
-
-        //store.dispatch(addGoalAction({
-        //    id: 0,
-        //    name: 'Learn Redux'
-        //}))
-
-        //store.dispatch(addGoalAction({
-        //    id: 1,
-        //    name: 'Lose 20 pounds'
-        //}))
-
-        //store.dispatch(removeGoalAction(0))
     </script>
 
 </body>
